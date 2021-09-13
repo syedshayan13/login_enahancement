@@ -1,0 +1,26 @@
+version: '3'
+services:
+  prometheus:
+    image: ubuntu/prometheus
+    ports:
+      - '9090:9090'
+    container_name: docker-compose-prometheus
+    volumes:
+      - ./main/resources/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+  db:
+    image: mysql
+    ports:
+      - '3307:3306'
+    container_name: docker-compose-MySQL_Database
+    volumes:
+      - my-db:/var/lib/mysql
+      - ./main/resources/initdb.sql:/docker-entrypoint-initdb.d/initdb.sql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: login
+volumes:
+    my-db:
